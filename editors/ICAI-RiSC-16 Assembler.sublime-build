@@ -1,0 +1,9 @@
+{
+	"cmd": ["icai_risc_as", "-o", "$file_base_name.vhd", "$file_name"],
+	"working_dir": "$file_path",
+	"shell": true,
+	"encoding": "cp850",
+	"selector": ["source.S", "source.asm", "source.s"],
+	"file_regex": "Opening file: (.*)",
+	"line_regex": "Error: line ([0-9]*)"
+}

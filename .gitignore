@@ -1,2 +1,8 @@
+*.i
 *.o
+*.exe
+*.png
+*.vhd
+*.nccout
 icai_risc_as
+bison.tab.h

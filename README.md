@@ -28,3 +28,4 @@ You will now be able to use make in bash provided by MSYS.
 * Add an equ pseudoinstruction.
 * Add an include pseudoinstruction
 * Group normal instructions encoding for code reuse.
+* Documentation! Compilation, usage, instructions...

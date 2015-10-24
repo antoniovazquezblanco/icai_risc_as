@@ -1,5 +1,7 @@
 CC = gcc
+ifneq ($(OS),Windows_NT)
 wininstaller:	CC = x86_64-w64-mingw32-gcc
+endif
 graph:	CC = ncc -ncgcc -ncld -ncspp -ncfabs
 LEX = flex
 YACC = bison
@@ -7,6 +9,9 @@ CFLAGS = -g3
 YFLAGS = -d
 LDFLAGS = -lfl
 wininstaller:	LDFLAGS =
+ifeq ($(OS),Windows_NT)
+LDFLAGS =
+endif
 EXECUTABLE = icai_risc_as
 FLEX = $(wildcard *.l)
 BISON = $(wildcard *.y)
@@ -42,7 +47,9 @@ debug:	all
 	gdb ./$(EXECUTABLE)
 
 wininstaller:	all
+ifneq ($(OS),Windows_NT)
 	mv $(EXECUTABLE) $(EXECUTABLE).exe
+endif
 	cd nsis; makensis installer.nsi; cd ..
 	mv nsis/icai_risc_as_v*.exe .
 

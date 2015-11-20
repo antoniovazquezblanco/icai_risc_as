@@ -211,7 +211,7 @@ char callback_codif_tas(output_t* out, unsigned short addr, unsigned char codop,
 [ \t\r]		;
 
  /* Labels */
-[a-zA-Z_]+\:	{ yylval.string = strdup(yytext); yylval.string[strlen(yylval.string)-1]=0; return LABEL; }
+[a-zA-Z][a-zA-Z0-9_]*\:	{ yylval.string = strdup(yytext); yylval.string[strlen(yylval.string)-1]=0; return LABEL; }
 
  /* Registers */
 \%r[0-7]	{ yylval.integer = atoi(yytext+2); return REGISTER; }

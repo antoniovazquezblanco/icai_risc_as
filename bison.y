@@ -52,7 +52,11 @@ line:	statement
 	;
 
 label:
-	LABEL	{ symbol_add($1, addr); free($1); }
+	LABEL	{
+		if(symbol_add($1, addr))
+			yyerror("Out of memory! Could not allocate symbol \"%s\"!", $1);
+		free($1);
+	}
 	;
 
 statement:

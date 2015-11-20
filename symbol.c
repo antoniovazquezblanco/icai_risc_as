@@ -19,55 +19,50 @@
  */
 struct symbol_s
 {
-	struct symbol_s* next;
+	struct symbol_s* prev;
 	char* name;
-	short addr;
-	/* Defined?, declared?, mem/rom? */
+	uint16_t addr;
 };
 
 /* Symbol table.
- * I don't like global variables but I have no other option...
  */
 struct symbol_s *table = NULL;
 
 /* Function that adds a symbol to the table.
  */
-void symbol_add(char* s, short addr)
+uint8_t symbol_add(char* s, uint16_t addr)
 {
-	if(table == NULL)
-	{
-		// Table was empty. Add the first item...
-		table = (struct symbol_s*)malloc(sizeof(struct symbol_s));
-		table->name = strdup(s);
-		table->addr = addr;
-		table->next = NULL;
-		return;
-	}
+	// Alloc a new symbol...
+	struct symbol_s *new = (struct symbol_s*)malloc(sizeof(struct symbol_s));
+	if(new == NULL)
+		// Could not alloc the struct. Return memory error...
+		return 1;
 
-	// Table is not empty...
-	struct symbol_s *i;	// For iterating...
-	for(i = table; i->next != NULL; i=i->next);	// Find the last existing symbol...
-	i->next = (struct symbol_s*)malloc(sizeof(struct symbol_s));	// Allocate one more symbol...
-	i = i->next;	// Move to the allocated symbol...
-	i->name = strdup(s);	// Fill it with info...
-	i->addr = addr;
-	i->next = NULL;
-	return; // Done...
+	// Fill data...
+	new->name = strdup(s);
+	new->addr = addr;
+	new->prev = table;
+
+	// Point to the new data...
+	table = new;
+
+	// Done!
+	return 0;
 }
 
 /* Search for a symbol in the table.
  */
-char symbol_get_address(char* s, short* addr)
+uint8_t symbol_get_address(char* s, uint16_t* addr)
 {
 	struct symbol_s *i;	// For iteration
-	for(i = table; i != NULL; i=i->next)
+	for(i = table; i != NULL; i=i->prev)
 		if(!strcmp(i->name, s))
 		{
 			*addr = i->addr;
 			return 0;	// Match!
 		}
 
-	return -1;	// No match...
+	return 1;	// No match...
 }
 
 /* Clean up the table...
@@ -77,10 +72,10 @@ void symbol_free()
 	struct symbol_s *i = NULL;
 	while(table != NULL)
 	{
-		i = table;	// Get the addr of this item
-		table = table->next;	// Move to next item before erasing
-		free(i->name);	// Free this label
-		free(i);	// Free this element
+		i = table;				// Get the addr of this item
+		table = table->prev;	// Move to next item before erasing
+		free(i->name);			// Free this label
+		free(i);				// Free this element
 	}
 	return;
 }
